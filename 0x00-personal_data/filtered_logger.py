@@ -62,7 +62,10 @@ def get_db():
     username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
     password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
     host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
-    database = os.getenv("PERSONAL_DATA_DB_NAME", "my_db")
+    database = os.getenv("PERSONAL_DATA_DB_NAME")
+
+    if not database:
+        return None
 
     # Connect to the database
     try:
