@@ -7,24 +7,33 @@ from typing import List
 import mysql.connector
 
 
-class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class """
+def filter_datum(fields: List[str], redaction: str, message: str,
+                 separator: str) -> str:
+    """Returns the log message obsfucated"""
+    pattern = '|'.join([re.escape(field) + r'=[^' + re.escape
+                        (separator) + r']*' for field in fields])
+    return re.sub(r'(' + pattern + r')', lambda m:
+                  f"{m.group(0).split('=')[0]}={redaction}", message)
 
+
+class RedactingFormatter(logging.Formatter):
+    """ Redacting Formatter class
+        """
+
+    REDACTION = "***"
+    FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
+    SEPARATOR = ";"
 
     def __init__(self, fields: List[str]):
         """Initialization"""
         self.fields = fields
-        super().__init__()
+        super().__init__(self.FORMAT)
 
     def format(self, record: logging.LogRecord) -> str:
         """Format method"""
-        record.msg = self.filter_datum(record.msg)
-        return super().format(record)
-
-    def filter_datum(self, message):
-        for field in self.fields:
-            message = message.replace(field, "****")
-        return message
+        message = super().format(record)
+        return filter_datum(
+                self.fields, self.REDACTION, message, self.SEPARATOR)
 
 
 class StreamHandler(logging.StreamHandler):
@@ -50,9 +59,9 @@ def get_logger() -> logging.Logger:
 
 def get_db():
     """Get database credentials from environment variables or set defaults"""
-    username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
-    password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
-    host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    username = os.getenv("PERSONAL_DATA_DB_USERNAME")
+    password = os.getenv("PERSONAL_DATA_DB_PASSWORD")
+    host = os.getenv("PERSONAL_DATA_DB_HOST")
     database = os.getenv("PERSONAL_DATA_DB_NAME")
 
     if not database:
