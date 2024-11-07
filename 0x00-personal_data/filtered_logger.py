@@ -59,10 +59,11 @@ def get_logger() -> logging.Logger:
 
 def get_db():
     """Get database credentials from environment variables or set defaults"""
-    username = os.getenv("PERSONAL_DATA_DB_USERNAME")
-    password = os.getenv("PERSONAL_DATA_DB_PASSWORD")
-    host = os.getenv("PERSONAL_DATA_DB_HOST")
-    database = os.getenv("PERSONAL_DATA_DB_NAME")
+    username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
+    password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
+    host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    database = os.getenv("PERSONAL_DATA_DB_NAME", "my_db")
+
     if not database:
         return None
 
@@ -78,3 +79,33 @@ def get_db():
     except mysql.connector.Error as err:
         print(f"Error connecting to the database: {err}")
         return None
+
+
+def main():
+    """Main function to fetch data from users table and log filtered output"""
+    logger = get_logger()
+
+    try:
+        db = get_db()
+        cursor = db.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM users;")
+        for row in cursor:
+            filtered_row = {
+                    key: "****" if key in PII_FIELDS
+                    else value for key, value in row.items()
+            }
+            logger.info("{}".format(filtered_row))
+
+        cursor.close()
+
+    except Exception as e:
+        logger.error(f"An error occurred: {e}")
+
+    finally:
+        if db:
+            db.close()
+
+
+if __name__ == "__main__":
+    main()
