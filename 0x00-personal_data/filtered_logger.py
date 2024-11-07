@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Log Formatter"""
 import logging
-import mysql.connector
 import os
 import re
 from typing import List
+import mysql.connector
 
 
 def filter_datum(fields: List[str], redaction: str, message: str,
