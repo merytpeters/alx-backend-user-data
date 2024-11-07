@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Log Formatter"""
 import logging
-from logging import StreamHandler
 import re
 from typing import List
 
@@ -35,6 +34,14 @@ class RedactingFormatter(logging.Formatter):
                 self.fields, self.REDACTION, message, self.SEPARATOR)
 
 
+class StreamHandler(logging.StreamHandler):
+    """StreamHandler class"""
+    def __init__(self, stream=None):
+        """Initialization"""
+        super().__init__(stream)
+        self.setFormatter(RedactingFormatter(fields=PII_FIELDS))
+
+
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
@@ -44,7 +51,5 @@ def get_logger() -> logging.Logger:
     logger.setLevel(logging.INFO)
     logger.propagate = False
     handler = StreamHandler()
-    formatter = RedactingFormatter(fields=PII_FIELDS)
-    handler.setFormatter(formatter)
     logger.addHandler(handler)
     return logger
