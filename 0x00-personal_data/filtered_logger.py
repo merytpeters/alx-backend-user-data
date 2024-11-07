@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Log Formatter"""
 import logging
+import mysql.connector
+import os
 import re
 from typing import List
 
@@ -53,3 +55,24 @@ def get_logger() -> logging.Logger:
     handler = StreamHandler()
     logger.addHandler(handler)
     return logger
+
+
+def get_db():
+    """Get database credentials from environment variables or set defaults"""
+    username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
+    password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
+    host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    database = os.getenv("PERSONAL_DATA_DB_NAME", "my_db")
+
+    # Connect to the database
+    try:
+        connection = mysql.connector.connect(
+            user=username,
+            password=password,
+            host=host,
+            database=database
+        )
+        return connection
+    except mysql.connector.Error as err:
+        print(f"Error connecting to the database: {err}")
+        return None
