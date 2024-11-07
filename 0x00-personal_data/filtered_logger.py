@@ -63,7 +63,6 @@ def get_db():
     password = os.getenv("PERSONAL_DATA_DB_PASSWORD")
     host = os.getenv("PERSONAL_DATA_DB_HOST")
     database = os.getenv("PERSONAL_DATA_DB_NAME")
-
     if not database:
         return None
 
