@@ -13,11 +13,16 @@ class Auth:
         if not path.endswith('/'):
             # Ensure that path is slash tolerant
             path += '/'
-        return path not in excluded_paths
+        for excluded_path in excluded_paths:
+            if excluded_path == path:
+                return False
+        return True
 
     def authorization_header(self, request=None) -> str:
         """Authorization header"""
-        return None
+        if request is None:
+            return None
+        return request.headers.get("Authorization", None)
 
     def current_user(self, request=None) -> TypeVar('User'):
         """Current User"""
