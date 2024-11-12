@@ -2,6 +2,7 @@
 """Auth class"""
 from flask import request
 from typing import List, TypeVar
+import fnmatch
 
 
 class Auth:
@@ -14,7 +15,7 @@ class Auth:
             # Ensure that path is slash tolerant
             path += '/'
         for excluded_path in excluded_paths:
-            if excluded_path == path:
+            if fnmatch.fnmatch(path, excluded_path):
                 return False
         return True
 
