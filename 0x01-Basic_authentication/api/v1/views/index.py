@@ -36,8 +36,3 @@ def unauthorized() -> str:
 def forbidden() -> str:
     """Unauthorized route"""
     abort(403)
-
-@app_views.route('/users', methods=['GET'], strict_slashes=False)
-def users() -> str:
-    """GET /api/v1/users"""
-    return jsonify({"users": ["user1", "user2"]})
