@@ -16,15 +16,20 @@ auth = None
 
 
 auth_type = getenv("AUTH_TYPE")
-if auth_type == "basic_auth":
-    from api.v1.auth.basic_auth import BasicAuth
-    auth = BasicAuth()
-elif auth_type == "auth":
-    try:
+try:
+    if auth_type == "basic_auth":
+        from api.v1.auth.basic_auth import BasicAuth
+        auth = BasicAuth()
+    elif auth_type == "session_auth":
+        from api.v1.auth.session_auth import SessionAuth
+        auth = SessionAuth()
+    elif auth_type == "auth":
         from api.v1.auth.auth import Auth
         auth = Auth()
-    except ImportError:
-        print("Error: Failed to import Auth class.")
+    else:
+        print(f"Warning: Unrecognized AUTH_TYPE '{auth_type}'.")
+except ImportError as e:
+    print(f"Error: Failed to import Auth class.: {e}")
 
 
 @app.before_request
