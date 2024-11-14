@@ -126,8 +126,8 @@ class Base():
         """ Search all objects with matching attributes
         """
         s_class = cls.__name__
-        # if s_class not in DATA or not isinstance(DATA[s_class], dict):
-        # return []
+        if s_class not in DATA or not isinstance(DATA[s_class], dict):
+            return []
 
         def _search(obj):
             if len(attributes) == 0:
