@@ -38,7 +38,7 @@ class Base():
     def __eq__(self, other: TypeVar('Base')) -> bool:
         """ Equality
         """
-        if type(self) != type(other):
+        if not isinstance(other, type(self)):
             return False
         if not isinstance(self, Base):
             return False
@@ -126,9 +126,9 @@ class Base():
         """ Search all objects with matching attributes
         """
         s_class = cls.__name__
-        if  s_class not in DATA or not isinstance(DATA[s_class], dict):
+        if s_class not in DATA or not isinstance(DATA[s_class], dict):
             return []
-        
+
         def _search(obj):
             if len(attributes) == 0:
                 return True
@@ -136,5 +136,5 @@ class Base():
                 if (getattr(obj, k) != v):
                     return False
             return True
-        
+
         return list(filter(_search, DATA[s_class].values()))
