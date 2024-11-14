@@ -20,9 +20,9 @@ try:
     if auth_type == "basic_auth":
         from api.v1.auth.basic_auth import BasicAuth
         auth = BasicAuth()
-    elif auth_type == "session_auth":
-        from api.v1.auth.session_auth import SessionAuth
-        auth = SessionAuth()
+    # elif auth_type == "session_auth":
+    # from api.v1.auth.session_auth import SessionAuth
+    # auth = SessionAuth()
     elif auth_type == "auth":
         from api.v1.auth.auth import Auth
         auth = Auth()
@@ -46,7 +46,7 @@ def before_request():
         abort(401)
     if auth.current_user(request) is None:
         abort(403)
-    request.current_user = auth.current_user(request)
+    # request.current_user = auth.current_user(request)
 
 
 @app.errorhandler(404)
