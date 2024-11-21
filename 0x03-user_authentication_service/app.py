@@ -49,8 +49,8 @@ def login():
         response = jsonify(email=email, message="logged in")
         response.set_cookie("session_id", session_id)
         return response, 200
-    except Exception as e:
-        return jsonify(message="An error occured"), 500
+    except Exception:
+        abort(401)
 
 
 if __name__ == "__main__":
