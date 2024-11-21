@@ -3,7 +3,7 @@
 import bcrypt
 
 
-def _hash_password(password) -> bytes:
+def _hash_password(password: str) -> bytes:
     """Hashed password"""
     if not password:
         raise ValueError("Password is required")
