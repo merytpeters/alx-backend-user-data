@@ -8,7 +8,7 @@ def _hash_password(password) -> bytes:
     if not password:
         raise ValueError("Password is required")
 
-    password_bytes = password.encode('utf-8')
+    password_bytes = password.encode()
 
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password_bytes, salt)
