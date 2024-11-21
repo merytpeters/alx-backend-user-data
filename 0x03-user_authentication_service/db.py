@@ -56,3 +56,23 @@ class DB:
             raise NoResultFound("Not found")
         except InvalidRequestError:
             raise InvalidRequestError("Invalid")
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """Uses find_user_by method to locate user to update"""
+        try:
+            user = self.find_user_by(id=user_id)
+
+            for attr, value in kwargs.items():
+                if hasattr(user, attr):
+                    setattr(user, attr, value)
+                else:
+                    raise ValueError(f"Invalid attribute: {attr}")
+
+            self._session.commit()
+
+        except NoResultFound:
+            raise ValueError(f"User with id {user_id} not found.")
+        except InvalidRequestError as e:
+            raise ValueError(f"Invalid request: {e}")
+        except Exception as e:
+            raise ValueError(f"An error occurred: {e}")
