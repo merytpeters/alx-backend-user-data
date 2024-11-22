@@ -89,7 +89,7 @@ class Auth:
             raise ValueError(
                 "User not found or unable to generate reset password token")
 
-    def update_passsword(self, reset_token: str, password: str) -> None:
+    def update_password(self, reset_token: str, password: str) -> None:
         """Update Password"""
         try:
             user = self._db.find_user_by(reset_token=reset_token)
