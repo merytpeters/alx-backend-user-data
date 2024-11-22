@@ -8,10 +8,11 @@ BASE_URL = "http://localhost:5000"
 
 def register_user(email: str, password: str) -> None:
     """Register user"""
-    response = requests.post(
+    resp = requests.post(
         f"{BASE_URL}/users", data={"email": email, "password": password})
-    assert response.status_code == 200, f"Unexpected status code: {response.status_code}"
-    assert response.json() == {"email": email, "message": "user created"}, "Unexpected response payload"
+    assert resp.status_code == 200, f"Unexpected status: {resp.status_code}"
+    assert resp.json() == {
+        "email": email, "message": "user created"}, "Unexpected payload"
 
 
 def log_in_wrong_password(email: str, password: str) -> None:
